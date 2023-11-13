@@ -52,7 +52,7 @@ while precision_point(curr_answer) < precision:  # Вычисления до t �
         factorial_divisor = 2  # Ход 1: Вычисление факториала
     else:
         calculated_matrix *= (matrix_x ** 3)  # Ход n: Умножение матриц (возведение в степень)
-        for j in [0, 1, 2]:  # Ход n: Вычисление факториала
+        for j in range(int_current_operator):  # Ход n: Вычисление факториала
             factorial_divisor = factorial_divisor * (int_current_operator - j)
     # Вычисление слагаемого и добавление к ответу
     if n % 2 == 1:
