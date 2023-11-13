@@ -1,35 +1,40 @@
 """Вычислить сумму знакопеременного ряда -(|х(3n-1)|)/(3n-1)!, где х-матрица ранга к (к и матрица задаются
 случайным образом), n - номер слагаемого. Сумма считается вычисленной, если точность вычислений будет не меньше t знаков
 после запятой. У алгоритма д.б. линейная сложность. Операция умножения –поэлементная. Знак первого слагаемого  +."""
-
+import math
 import random
 import numpy as np
 from decimal import Decimal, getcontext
+from math import ceil
 
-
-def fractional_part_len(number_to_count):  # Подсчёт кол-ва знаков после запятой
+def precision_point(number_to_count):  # Функция подсчёта кол-ва знаков после запятой
     return Decimal(number_to_count).as_tuple().exponent * (-1)
 
 
-int_t = input('Введите число t > 0 (кол-во знаков после запятой): ')  # Ввод и проверка введёного числа t
+flag = 0
+precision = input('Введите число t > 0 (кол-во знаков после запятой): ')  # Ввод и проверка введёного числа знаков после запятой
+
 while True:
     try:
-        int_t = int(int_t)
+        precision = int(precision)
     except ValueError:
         print('Ошибка: введено не число. Повторите ввод.')
-        int_t = None
+        precision = None
     finally:
-        if int_t is None:
+        if precision is None:
             pass
-        elif int_t < 0:
+        elif precision < 0:
             print('Ошибка: число меньше нуля. Повторите ввод.')
-        else:
-            getcontext().prec = int_t  # Увеличение глубины Decimal
+        elif precision == 0:
+            flag = 1
             break
-    int_t = input('Введите число t > 0:')
+        else:
+            getcontext().prec = precision # Увеличение глубины Decimal
+            break
+    precision = input('Введите число t > 0:')
 
-int_k = random.randint(1, 10)  # Cоздание и вывод матрицы
-matrix_x = np.random.uniform(-1, 1, (int_k, int_k))
+matrix_rank = random.randint(1, 10)  # Cоздание и вывод матрицы
+matrix_x = np.random.uniform(-1, 1, (matrix_rank, matrix_rank))
 print('Матрица x:\n' + str(matrix_x))
 
 n = 1
@@ -39,7 +44,7 @@ curr_answer = 0
 
 
 # Вычисление суммы знакопеременного ряда
-while fractional_part_len(curr_answer) < int_t:  # Вычисления до t знаков после запятой
+while precision_point(curr_answer) < precision:  # Вычисления до t знаков после запятой
     int_current_operator = n * 3 - 1
 
     if int_current_operator == 2:
@@ -58,5 +63,8 @@ while fractional_part_len(curr_answer) < int_t:  # Вычисления до t �
             -1 * (Decimal(np.linalg.det(calculated_matrix))) / Decimal(factorial_divisor)
 
     n += 1  # Вычисление следующего числа
+
+if flag == 1:
+    curr_answer = math.ceil(float(curr_answer))
 
 print('Ответ: ' + str(curr_answer))
