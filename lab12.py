@@ -7,12 +7,8 @@ import numpy as np
 from decimal import Decimal, getcontext
 
 
-def precision_point(number_to_count):  # Функция подсчёта кол-ва знаков после запятой
-    return Decimal(number_to_count).as_tuple().exponent * (-1)
-
-
 flag = 0
-precision = input('Введите число t > 0 (кол-во знаков после запятой): ')  # Ввод и проверка введёного числа знаков после запятой
+precision = input('Введите число t > 0: ')  # Ввод и проверка введёного числа знаков после запятой
 
 while True:
     try:
@@ -23,13 +19,13 @@ while True:
     finally:
         if precision is None:
             pass
-        elif precision < 0:
+        elif float(precision) < 0:
             print('Ошибка: число меньше нуля. Повторите ввод.')
-        elif precision == 0:
+        elif int(precision) == 0:
             flag = 1
             break
         else:
-            getcontext().prec = precision # Увеличение глубины Decimal
+            getcontext().prec = precision
             break
     precision = input('Введите число t > 0:')
 
@@ -39,29 +35,22 @@ print('Матрица x:\n' + str(matrix_x))
 
 n = 1
 calculated_matrix = matrix_x
-factorial_divisor = None
+factorial_divisor = 1
 curr_answer = 0
 
 
 # Вычисление суммы знакопеременного ряда
-while precision_point(curr_answer) < precision:  # Вычисления до t знаков после запятой
+while precision > len(str(curr_answer)):  # Вычисления до t знаков после запятой
+
     int_current_operator = n * 3 - 1
 
-    if int_current_operator == 2:
-        calculated_matrix *= matrix_x  # Шаг 1: Умножение матриц (возведение в степень)
-        factorial_divisor = 2  # Шаг 1: Вычисление знаменателя
-
-    else:
-        calculated_matrix *= (matrix_x ** 3)  # Шаг n: Умножение матриц (возведение в степень)
-        factorial_divisor *= (int_current_operator - 1) * (int_current_operator - 2) # Шаг n: Вычисление знаменателя
+    calculated_matrix *= (matrix_x ** 3)  # Шаг n: Умножение матриц (возведение в степень)
+    factorial_divisor *= -1 * (int_current_operator - 1) * (int_current_operator - 2)  # Шаг n: Вычисление знаменателя
+    if factorial_divisor == 0:
+        factorial_divisor = 1
 
     # Вычисление слагаемого и добавление к ответу
-    if n % 2 == 1:
-        curr_answer += \
-            -1 * (Decimal(np.linalg.det(calculated_matrix))) / Decimal(factorial_divisor)
-    else:
-        curr_answer -= \
-            -1 * (Decimal(np.linalg.det(calculated_matrix))) / Decimal(factorial_divisor)
+    curr_answer += -1 * (Decimal(np.linalg.det(calculated_matrix))) / Decimal(factorial_divisor)
 
     n += 1  # Вычисление следующего числа
 
