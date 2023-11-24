@@ -5,7 +5,7 @@ import math
 import random
 import numpy as np
 from decimal import Decimal, getcontext
-from math import ceil
+
 
 def precision_point(number_to_count):  # Функция подсчёта кол-ва знаков после запятой
     return Decimal(number_to_count).as_tuple().exponent * (-1)
@@ -48,12 +48,13 @@ while precision_point(curr_answer) < precision:  # Вычисления до t �
     int_current_operator = n * 3 - 1
 
     if int_current_operator == 2:
-        calculated_matrix *= matrix_x  # Ход 1: Умножение матриц (возведение в степень)
-        factorial_divisor = 2  # Ход 1: Вычисление факториала
+        calculated_matrix *= matrix_x  # Шаг 1: Умножение матриц (возведение в степень)
+        factorial_divisor = 2  # Шаг 1: Вычисление знаменателя
+
     else:
-        calculated_matrix *= (matrix_x ** 3)  # Ход n: Умножение матриц (возведение в степень)
-        for j in range(int_current_operator):  # Ход n: Вычисление факториала
-            factorial_divisor = factorial_divisor * (int_current_operator - j)
+        calculated_matrix *= (matrix_x ** 3)  # Шаг n: Умножение матриц (возведение в степень)
+        factorial_divisor *= (int_current_operator - 1) * (int_current_operator - 2) # Шаг n: Вычисление знаменателя
+
     # Вычисление слагаемого и добавление к ответу
     if n % 2 == 1:
         curr_answer += \
